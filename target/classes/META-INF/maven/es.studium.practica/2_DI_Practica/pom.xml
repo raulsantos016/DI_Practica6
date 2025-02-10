@@ -12,6 +12,31 @@
  		<artifactId>mysql-connector-java</artifactId>
 		<version>8.0.33</version>
 		</dependency>
+		<!-- Dependencia para JasperReports -->
+
+    <dependency>
+
+        <groupId>net.sf.jasperreports</groupId>
+
+        <artifactId>jasperreports</artifactId>
+
+        <version>7.0.1</version> <!-- O la versión que estés usando -->
+
+    </dependency>
+
+
+
+    <!-- Dependencia para JasperReports PDF (para exportación a PDF) -->
+
+    <dependency>
+
+        <groupId>net.sf.jasperreports</groupId>
+
+        <artifactId>jasperreports-pdf</artifactId>
+
+        <version>7.0.1</version> <!-- Versión de JasperReports -->
+
+    </dependency>
   </dependencies>
    
   <properties>

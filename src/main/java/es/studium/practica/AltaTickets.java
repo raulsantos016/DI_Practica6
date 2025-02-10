@@ -184,7 +184,7 @@ public class AltaTickets extends JFrame
 				setVisible(false);
 			}
 		});
-		btnVolver.setBounds(303, 208, 104, 23);
+		btnVolver.setBounds(303, 208, 106, 23);
 		panel.add(btnVolver);
 
 		JLabel lblEuro = new JLabel("€");

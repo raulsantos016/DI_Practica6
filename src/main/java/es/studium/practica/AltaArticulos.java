@@ -135,7 +135,7 @@ public class AltaArticulos extends JFrame
 				setVisible(false);
 			}
 		});
-		btnVolver.setBounds(309, 227, 104, 23);
+		btnVolver.setBounds(309, 227, 106, 23);
 		panel.add(btnVolver);
 		
 		JLabel lblEuro = new JLabel("€");
