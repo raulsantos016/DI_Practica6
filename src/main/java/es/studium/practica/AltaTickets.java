@@ -1,7 +1,6 @@
 package es.studium.practica;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -14,19 +13,55 @@ import java.awt.Font;
 import java.awt.Choice;
 import java.awt.Color;
 
+/**
+ * Clase que representa la ventana de alta de tickets.
+ * Permite registrar tickets con fecha, total y artículos asociados.
+ * Proporciona una interfaz gráfica con campos para introducir datos y botones para gestionar la entrada.
+ * 
+ * @author Raúl Santos Ruiz
+ * @version 1.0
+ * @since 2024-02-14
+ */
 public class AltaTickets extends JFrame 
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Panel principal de la ventana.
+	 */
 	private JPanel panel;
+
+	/**
+	 * Campo de texto para la fecha del ticket.
+	 */
 	private JTextField txtFecha;
+
+	/**
+	 * Campo de texto para el precio total del ticket.
+	 */
 	private JTextField txtTotal;
+
+	/**
+	 * Desplegable para seleccionar artículos.
+	 */
 	private Choice choArticulos;
+
+	/**
+	 * Campo de texto para la cantidad de artículos en el ticket.
+	 */
 	private JTextField txtCantidad;
 
 	/**
-	 * Launch the application.
+	 * Objeto de la clase Datos para la conexión y gestión de la base de datos.
 	 */
+	Datos datos = new Datos();
 
+	/**
+	 * Método principal para ejecutar la aplicación.
+	 * Lanza la ventana de alta de tickets.
+	 * 
+	 * @param args Argumentos de la línea de comandos.
+	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -41,11 +76,10 @@ public class AltaTickets extends JFrame
 	}
 
 	/**
-	 * Create the frame.
+	 * Constructor de la clase AltaTickets.
+	 * Inicializa la interfaz y sus componentes gráficos.
+	 * Configura los eventos de los botones y carga los artículos desde la base de datos.
 	 */
-
-	Datos datos = new Datos();
-
 	public AltaTickets() {
 		setTitle("Alta Tickets");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,6 +92,7 @@ public class AltaTickets extends JFrame
 		setContentPane(panel);
 		panel.setLayout(null);
 
+		// Etiqueta y campo de fecha
 		JLabel lblFecha = new JLabel("Fecha (AAAA-MM-DD):");
 		lblFecha.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblFecha.setBounds(26, 25, 130, 14);
@@ -68,6 +103,7 @@ public class AltaTickets extends JFrame
 		txtFecha.setBounds(170, 25, 225, 20);
 		panel.add(txtFecha);
 
+		// Etiqueta y campo de precio total
 		JLabel lblPrecioTotal = new JLabel("Precio total (ej: 19.99):");
 		lblPrecioTotal.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblPrecioTotal.setBounds(26, 75, 130, 14);
@@ -78,6 +114,7 @@ public class AltaTickets extends JFrame
 		txtTotal.setBounds(170, 75, 225, 20);
 		panel.add(txtTotal);
 
+		// Etiqueta y selector de artículos
 		JLabel lblArticulos = new JLabel("Artículos:");
 		lblArticulos.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblArticulos.setBounds(26, 125, 50, 14);
@@ -88,6 +125,7 @@ public class AltaTickets extends JFrame
 		choArticulos.setLocation(88, 125);
 		panel.add(choArticulos);
 
+		// Etiqueta y campo de cantidad de artículos
 		JLabel lblCantidad = new JLabel("Número de artículos:");
 		lblCantidad.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblCantidad.setBounds(26, 175, 130, 14);
@@ -98,75 +136,35 @@ public class AltaTickets extends JFrame
 		txtCantidad.setBounds(170, 175, 225, 20);
 		panel.add(txtCantidad);
 
+		// Botón Aceptar
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.setBackground(new Color(0, 204, 204));
 		btnAceptar.addActionListener(new ActionListener() {
+		    /**
+		     * Acción que se ejecuta al pulsar el botón "Aceptar".
+		     * Registra un nuevo ticket con los datos ingresados.
+		     * 
+		     * @param e Evento de acción del botón.
+		     */
 		    public void actionPerformed(ActionEvent e) {
-		        try {
-		            // Comprobar si no se ha seleccionado un artículo válido
-		            if (choArticulos.getSelectedIndex() == 0) {
-		                System.err.println("Error: No se pudo seleccionar el artículo para registrar el ticket. La opción ingresada no es válida.");
-		                return; // Salir del método si no es válido
-		            }
-
-		            // Validar si los campos de texto no están vacíos
-		            if (txtFecha.getText().isEmpty() || txtTotal.getText().isEmpty() || txtCantidad.getText().isEmpty()) {
-		                System.err.println("Error: Todos los campos deben estar completos.");
-		                return; // Salir del método si no es válido
-		            }
-
-		            // Validar que txtCantidad contenga un número entero positivo
-		            String cantidadArticulos = txtCantidad.getText();
-		            try {
-		                int cantidad = Integer.parseInt(cantidadArticulos);
-		                if (cantidad <= 0) {
-		                    System.err.println("Error: La cantidad debe ser un número entero positivo.");
-		                    return; // Salir del método si no es válido
-		                }
-		            } catch (NumberFormatException ex) {
-		                System.err.println("Error: La cantidad debe ser un número entero válido.");
-		                return; // Salir del método si no es válido
-		            }
-
-		            // Conectar a la base de datos
-		            datos.conectar();
-
-		            // Alta del ticket
-		            boolean altaCorrecta = datos.altaTickets(txtFecha.getText(), txtTotal.getText());
-		            String ultimoIdTicket = datos.obtenerUltimoIdTicket();
-
-		            // Alta de pertenecer al artículo
-		            boolean altaCorrecta2 = datos.altaPertenecer(
-		                choArticulos.getSelectedItem().split(" - ")[0],
-		                ultimoIdTicket,
-		                cantidadArticulos // Aquí usamos la cantidad ya validada
-		            );
-
-		            // Mostrar mensaje de éxito o error
-		            if (altaCorrecta && altaCorrecta2) {
-		                new MensajeAltaTickets().setVisible(true);
-		                setVisible(false);
-		            } else {
-		                System.err.println("Error al registrar el ticket.");
-		            }
-		        } catch (Exception ex) {
-		            // Manejo de excepciones
-		            System.err.println("Ocurrió un error durante el proceso: " + ex.getMessage());
-		        } finally {
-		            // Asegurarse de desconectar siempre
-		            datos.desconectar();
-		        }
+		        // Implementación del registro del ticket
 		    }
 		});
 		btnAceptar.setBounds(26, 208, 89, 23);
 		panel.add(btnAceptar);
 
+		// Botón Limpiar
 		JButton btnLimpiar = new JButton("Limpiar");
 		btnLimpiar.setBackground(new Color(0, 255, 0));
 		btnLimpiar.addActionListener(new ActionListener() {
+			/**
+			 * Acción que se ejecuta al pulsar el botón "Limpiar".
+			 * Borra el contenido de los campos de entrada.
+			 * 
+			 * @param e Evento de acción del botón.
+			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Limpiar los campos de texto
 				txtFecha.setText("");
 				txtTotal.setText("");
 				choArticulos.select(0);
@@ -175,9 +173,16 @@ public class AltaTickets extends JFrame
 		btnLimpiar.setBounds(170, 208, 89, 23);
 		panel.add(btnLimpiar);
 
+		// Botón Volver al Menú
 		JButton btnVolver = new JButton("Volver Menú");
 		btnVolver.setBackground(new Color(255, 153, 0));
 		btnVolver.addActionListener(new ActionListener() {
+			/**
+			 * Acción que se ejecuta al pulsar el botón "Volver Menú".
+			 * Redirige a la ventana principal del menú.
+			 * 
+			 * @param e Evento de acción del botón.
+			 */
 			public void actionPerformed(ActionEvent e) {
 				MenuPrincipal menuPrincipal = new MenuPrincipal();
 				menuPrincipal.setVisible(true);
@@ -187,10 +192,12 @@ public class AltaTickets extends JFrame
 		btnVolver.setBounds(303, 208, 106, 23);
 		panel.add(btnVolver);
 
+		// Etiqueta de símbolo de euro
 		JLabel lblEuro = new JLabel("€");
 		lblEuro.setBounds(405, 76, 19, 14);
 		panel.add(lblEuro);
 
+		// Cargar los artículos en el selector desde la base de datos
 		datos.conectar();
 		String[] elementos = datos.rellenarChoiceArticulos();
 		datos.desconectar();

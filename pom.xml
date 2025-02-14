@@ -1,47 +1,63 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.studium.practica</groupId>
-  <artifactId>2_DI_Practica</artifactId>
+  <artifactId>DIT6_Practica</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>2_DI_Practica</name>
-  
+  <name>DIT6_Practica</name>
+
   <dependencies>
-		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-		<dependency>
- 		<groupId>mysql</groupId>
- 		<artifactId>mysql-connector-java</artifactId>
-		<version>8.0.33</version>
-		</dependency>
-		<!-- Dependencia para JasperReports -->
-
+    <!-- Dependencia para MySQL Connector -->
     <dependency>
-
-        <groupId>net.sf.jasperreports</groupId>
-
-        <artifactId>jasperreports</artifactId>
-
-        <version>7.0.1</version> <!-- O la versión que estés usando -->
-
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.33</version>
     </dependency>
 
-
+    <!-- Dependencia para JasperReports -->
+    <dependency>
+      <groupId>net.sf.jasperreports</groupId>
+      <artifactId>jasperreports</artifactId>
+      <version>7.0.1</version> <!-- O la versión que estés usando -->
+    </dependency>
 
     <!-- Dependencia para JasperReports PDF (para exportación a PDF) -->
+    <dependency>
+      <groupId>net.sf.jasperreports</groupId>
+      <artifactId>jasperreports-pdf</artifactId>
+      <version>7.0.1</version> <!-- Versión de JasperReports -->
+    </dependency>
+
+    <!-- Dependencia de Apache POI (para manejar archivos Excel) -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>5.2.3</version> <!-- Asegúrate de usar la versión que necesitas -->
+    </dependency>
 
     <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>5.2.3</version> <!-- Asegúrate de usar la versión que necesitas -->
+    </dependency>
 
-        <groupId>net.sf.jasperreports</groupId>
+    <!-- Dependencia de Log4j2 (para el sistema de logging de JasperReports) -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.20.0</version> <!-- La versión más reciente disponible -->
+    </dependency>
 
-        <artifactId>jasperreports-pdf</artifactId>
-
-        <version>7.0.1</version> <!-- Versión de JasperReports -->
-
+    <!-- Dependencia de Log4j2 API (si es necesario) -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>2.20.0</version> <!-- La versión más reciente disponible -->
     </dependency>
   </dependencies>
-   
+
   <properties>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
   </properties>
-  
+
 </project>

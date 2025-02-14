@@ -13,17 +13,45 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
+/**
+ * Ventana que permite consultar los tickets generados en un rango de fechas
+ * y generar un reporte en formato JasperReport.
+ * <p>Los usuarios pueden ingresar un rango de fechas para generar el informe de tickets.</p>
+ * 
+ * @author Raúl Santos Ruiz
+ * @version 1.0
+ * @since 2025-02-14
+ */
 public class ConsultaTickets extends JFrame {
+    
     private static final long serialVersionUID = 1L;
+    
+    /** URL de la base de datos. */
     private static final String DB_URL = "jdbc:mysql://localhost:3306/tiendecitarsr";
+    
+    /** Usuario de la base de datos. */
     private static final String DB_USER = "root";
+    
+    /** Contraseña de la base de datos. */
     private static final String DB_PASSWORD = "PonferradinA_08";
+    
+    /** Ruta del archivo de reporte JasperReport. */
     private static final String REPORT_PATH = "src/main/resources/Ejemplo2.jasper";
     
+    /** Panel principal de la ventana. */
     private JPanel panel;
+    
+    /** Campo de texto para la fecha de inicio. */
     private JTextField textFieldDesde;
+    
+    /** Campo de texto para la fecha de fin. */
     private JTextField textFieldHasta;
 
+    /**
+     * Método principal que lanza la aplicación.
+     * 
+     * @param args Argumentos de la línea de comandos.
+     */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -35,6 +63,10 @@ public class ConsultaTickets extends JFrame {
         });
     }
 
+    /**
+     * Constructor de la clase. Inicializa la ventana de consulta de tickets,
+     * configurando la interfaz gráfica, los campos de fecha y los botones.
+     */
     public ConsultaTickets() {
         setTitle("Consulta Tickets");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,7 +102,7 @@ public class ConsultaTickets extends JFrame {
         btnAceptar.setBackground(new Color(51, 204, 204));
         btnAceptar.addActionListener(this::procesarConsulta);
 
-        // Definición del diseño
+        // Diseño del layout
         layout.setHorizontalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                 .addComponent(lblFechaDesde)
@@ -78,11 +110,11 @@ public class ConsultaTickets extends JFrame {
                 .addComponent(lblFechaHasta)
                 .addComponent(textFieldHasta)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(50)  // Espacio desde la izquierda
-                    .addComponent(btnAceptar, 150, 150, 150)  // Aceptar a la izquierda
-                    .addGap(30)  // Espacio entre los botones
-                    .addComponent(btnVolver, 150, 150, 150)  // Volver Menú a la derecha
-                    .addGap(50)  // Espacio hasta la derecha
+                    .addGap(50)
+                    .addComponent(btnAceptar, 150, 150, 150)
+                    .addGap(30)
+                    .addComponent(btnVolver, 150, 150, 150)
+                    .addGap(50)
                 )
         );
 
@@ -99,6 +131,13 @@ public class ConsultaTickets extends JFrame {
         );
     }
 
+    /**
+     * Procesa la consulta de tickets en el rango de fechas proporcionado
+     * por el usuario. Verifica si las fechas son válidas y genera un reporte
+     * si la entrada es correcta.
+     * 
+     * @param e El evento que dispara la acción de procesar la consulta.
+     */
     private void procesarConsulta(ActionEvent e) {
         String fechaDesdeStr = textFieldDesde.getText();
         String fechaHastaStr = textFieldHasta.getText();
@@ -117,18 +156,33 @@ public class ConsultaTickets extends JFrame {
         }
     }
 
+    /**
+     * Convierte una cadena de texto en una fecha en formato SQL.
+     * 
+     * @param fechaStr La cadena de texto con el formato "AAAA-MM-DD".
+     * @return La fecha convertida en formato SQL.
+     * @throws ParseException Si el formato de la fecha no es válido.
+     */
     private java.sql.Date parseFecha(String fechaStr) throws ParseException {
         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date parsedDate = formato.parse(fechaStr);
         return new java.sql.Date(parsedDate.getTime());
     }
 
+    /**
+     * Genera y muestra el reporte de tickets basado en el rango de fechas
+     * proporcionado. Utiliza JasperReports para generar el informe y mostrarlo.
+     * 
+     * @param fechaDesde Fecha de inicio del rango de consulta.
+     * @param fechaHasta Fecha de fin del rango de consulta.
+     */
     private void generarReporte(java.sql.Date fechaDesde, java.sql.Date fechaHasta) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile(REPORT_PATH);
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("fechaDesde", fechaDesde);
             parameters.put("fechaHasta", fechaHasta);
+            parameters.put("Parametro1", "Raúl Santos");
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, conn);
             JasperViewer.viewReport(jasperPrint, false);
         } catch (JRException | SQLException e) {
@@ -137,6 +191,11 @@ public class ConsultaTickets extends JFrame {
         }
     }
 
+    /**
+     * Vuelve al menú principal de la aplicación.
+     * 
+     * @param e El evento que dispara la acción de volver al menú.
+     */
     private void volverAlMenu(ActionEvent e) {
         MenuPrincipal menuPrincipal = new MenuPrincipal();
         menuPrincipal.setVisible(true);

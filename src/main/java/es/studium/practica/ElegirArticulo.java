@@ -1,7 +1,6 @@
 package es.studium.practica;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,104 +11,124 @@ import java.awt.event.ActionEvent;
 import java.awt.Choice;
 import java.awt.Color;
 
-public class ElegirArticulo extends JFrame 
-{
-	private static final long serialVersionUID = 1L;
-	private JPanel panel;
-	private Choice choArticulos; // Hacer choArticulos accesible en toda la clase
-	private Datos datos = new Datos();
+/**
+ * Ventana que permite al usuario elegir un artículo de una lista y realizar
+ * modificaciones sobre el artículo seleccionado.
+ * <p>El usuario puede seleccionar un artículo de un desplegable y, al presionar el botón "Aceptar", 
+ * la aplicación llevará a la ventana de modificación del artículo.</p>
+ * 
+ * @author Raúl Santos Ruiz
+ * @version 1.0
+ * @since 2025-02-14
+ */
+public class ElegirArticulo extends JFrame {
+    
+    private static final long serialVersionUID = 1L;
+    
+    private JPanel panel;  // Panel principal donde se agregan los componentes gráficos
+    private Choice choArticulos; // Lista desplegable de artículos
+    private Datos datos = new Datos();  // Instancia de la clase Datos para la gestión de la base de datos
 
-	/**
-	 * Launch the application.
-	 */
+    /**
+     * Método principal que lanza la aplicación.
+     * <p>Este método se ejecuta al iniciar la aplicación y muestra la ventana de selección de artículo.</p>
+     * 
+     * @param args Argumentos de la línea de comandos.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    ElegirArticulo frame = new ElegirArticulo();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ElegirArticulo frame = new ElegirArticulo();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    /**
+     * Constructor que inicializa la ventana para elegir un artículo.
+     * <p>Este constructor configura la ventana con los elementos gráficos, 
+     * como botones y la lista desplegable de artículos, y también agrega 
+     * los eventos necesarios para la interacción del usuario.</p>
+     */
+    public ElegirArticulo() {
+        setTitle("Elegir Artículo");  // Título de la ventana
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Acción cuando se cierra la ventana
+        setBounds(100, 100, 450, 300);  // Tamaño y posición de la ventana
+        panel = new JPanel();  // Crear un nuevo panel
+        panel.setBackground(new Color(204, 255, 255));  // Color de fondo del panel
+        panel.setBorder(new EmptyBorder(5, 5, 5, 5));  // Bordes del panel
+        setLocationRelativeTo(null);  // Centrar la ventana en la pantalla
 
-	/**
-	 * Create the frame.
-	 */
+        setContentPane(panel);  // Establecer el panel como contenido de la ventana
+        panel.setLayout(null);  // Layout sin restricciones
 
-	public ElegirArticulo() {
-		setTitle("Elegir Artículo");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		panel = new JPanel();
-		panel.setBackground(new Color(204, 255, 255));
-		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setLocationRelativeTo(null);
+        // Inicializar Choice (lista desplegable)
+        choArticulos = new Choice();
+        choArticulos.setSize(350, 20);  // Establecer tamaño de la lista
+        choArticulos.setLocation(40, 112);  // Establecer posición en la ventana
+        panel.add(choArticulos);  // Agregar la lista al panel
 
-		setContentPane(panel);
-		panel.setLayout(null);
+        JLabel lblPrincipal = new JLabel("Elige un artículo:");  // Etiqueta de la lista
+        lblPrincipal.setBounds(159, 80, 98, 14);  // Establecer la posición de la etiqueta
+        panel.add(lblPrincipal);  // Agregar la etiqueta al panel
 
-		// Inicializar Choice
-		choArticulos = new Choice();
-		choArticulos.setSize(350, 20);
-		choArticulos.setLocation(40, 112);
-		panel.add(choArticulos);
+        // Botón de "Aceptar"
+        JButton btnAceptar = new JButton("Aceptar");
+        btnAceptar.setBackground(new Color(0, 204, 204));  // Color de fondo del botón
+        btnAceptar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Verificar si se ha seleccionado un artículo válido
+                if (choArticulos.getSelectedIndex() == 0) {
+                    // Mostrar el error en la consola si no se ha seleccionado un artículo
+                    System.err.println("Error: No se pudo seleccionar el artículo para modificar. La opción ingresada no es válida.");
+                } else {
+                    // Obtener los datos del artículo seleccionado
+                    String elementoSeleccionadoId = choArticulos.getSelectedItem().split(" - ")[0];
+                    String elementoSeleccionadoDescripcion = choArticulos.getSelectedItem().split(" - ")[1];
+                    String elementoSeleccionadoPrecio = choArticulos.getSelectedItem().split(" - ")[2];
+                    String elementoSeleccionadoCantidad = choArticulos.getSelectedItem().split(" - ")[3];
 
-		JLabel lblPrincipal = new JLabel("Elige un artículo:");
-		lblPrincipal.setBounds(159, 80, 98, 14);
-		panel.add(lblPrincipal);
+                    // Crear una instancia de la ventana de modificación de artículo
+                    ModificacionArticulo frame = new ModificacionArticulo();
 
-		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBackground(new Color(0, 204, 204));
-		btnAceptar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (choArticulos.getSelectedIndex() == 0) {
-					// Mostrar el error en la consola
-					System.err.println("Error: No se pudo seleccionar el artículo para modificar. La opción ingresada no es válida.");
-				} else {
-					// Obtener el artículo seleccionado del Choice
-					String elementoSeleccionadoId = choArticulos.getSelectedItem().split(" - ")[0];
-					String elementoSeleccionadoDescripcion = choArticulos.getSelectedItem().split(" - ")[1];
-					String elementoSeleccionadoPrecio = choArticulos.getSelectedItem().split(" - ")[2];
-					String elementoSeleccionadoCantidad = choArticulos.getSelectedItem().split(" - ")[3];
+                    // Pasar los datos del artículo seleccionado a la ventana de modificación
+                    frame.recibirDato(elementoSeleccionadoId, elementoSeleccionadoDescripcion, elementoSeleccionadoPrecio, elementoSeleccionadoCantidad);
 
-					// Crear una instancia de MenuModificacionArticulo
-					ModificacionArticulo frame = new ModificacionArticulo();
+                    // Mostrar la ventana de modificación de artículo
+                    frame.setVisible(true);
+                    setVisible(false);  // Ocultar la ventana actual
+                }
+            }
+        });
+        btnAceptar.setBounds(75, 177, 89, 23);  // Establecer la posición y tamaño del botón
+        panel.add(btnAceptar);  // Agregar el botón al panel
 
-					// Pasar la información seleccionada a MenuModificacionArticulo
-					frame.recibirDato(elementoSeleccionadoId, elementoSeleccionadoDescripcion, elementoSeleccionadoPrecio, elementoSeleccionadoCantidad);
+        // Botón para volver al menú principal
+        JButton btnVolver = new JButton("Volver Menú");
+        btnVolver.setBackground(new Color(255, 153, 0));  // Color de fondo del botón
+        btnVolver.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Volver al menú principal
+                MenuPrincipal menuPrincipal = new MenuPrincipal();
+                menuPrincipal.setVisible(true);
+                setVisible(false);  // Ocultar la ventana actual
+            }
+        });
+        btnVolver.setBounds(242, 177, 108, 23);  // Establecer la posición y tamaño del botón
+        panel.add(btnVolver);  // Agregar el botón al panel
 
-					// Mostrar la ventana de MenuModificacionArticulo
-					frame.setVisible(true);
-					setVisible(false);
-				}
-			}
-		});
-		btnAceptar.setBounds(75, 177, 89, 23);
-		panel.add(btnAceptar);
+        // Llenar la lista desplegable con los datos de los artículos
+        datos.conectar();  // Conectar a la base de datos
+        String[] elementos = datos.rellenarChoiceArticulos();  // Obtener los elementos de la base de datos
+        datos.desconectar();  // Desconectar de la base de datos
 
-		JButton btnVolver = new JButton("Volver Menú");
-		btnVolver.setBackground(new Color(255, 153, 0));
-		btnVolver.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MenuPrincipal menuPrincipal = new MenuPrincipal();
-				menuPrincipal.setVisible(true);
-				setVisible(false);
-			}
-		});
-		btnVolver.setBounds(242, 177, 108, 23);
-		panel.add(btnVolver);
-
-		// Llenar el Choice con datos
-		datos.conectar();
-		String[] elementos = datos.rellenarChoiceArticulos();
-		datos.desconectar();
-
-		for (String elemento : elementos) {
-			choArticulos.add(elemento);
-		}
-	}
+        // Agregar cada elemento a la lista Choice
+        for (String elemento : elementos) {
+            choArticulos.add(elemento);  // Añadir cada artículo a la lista desplegable
+        }
+    }
 }
